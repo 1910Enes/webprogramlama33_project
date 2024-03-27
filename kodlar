@@ -1,0 +1,129 @@
+index.jsp
+
+
+
+
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Kayıt Formu</title>
+    <link rel="stylesheet" type="text/css" href="Style.css">
+</head>
+<body>
+    <h1>Kullanıcı Kayıt Formu</h1>
+    <form action="UserRegister" method="post">
+        <div class="form-group">
+            <label for="ad">Ad:</label>
+            <input type="text" id="ad" name="ad">
+        </div>
+        <div class="form-group">
+            <label for="soyad">Soyad:</label>
+            <input type="text" id="soyad" name="soyad">
+        </div>
+        <div class="form-group">
+            <label for="eposta">Eposta:</label>
+            <input type="text" id="eposta" name="eposta">
+        </div>
+        <div class="form-group">
+            <label for="sifre">Şifre:</label>
+            <input type="password" id="sifre" name="sifre">
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Kaydet">
+        </div>
+    </form>
+</body>
+</html>
+
+
+
+
+
+web.xml
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" id="WebApp_ID" version="5.0">
+  <display-name>odev3</display-name>
+
+<servlet>
+
+<servlet-name>abc</servlet-name>
+<servlet-class>codes.UserRegister</servlet-class>
+</servlet>
+<servlet-mapping>
+
+<servlet-name>abc</servlet-name>
+<url-pattern>/UserRegister</url-pattern>
+</servlet-mapping>
+</web-app>
+
+
+
+
+
+
+UserRegister.java
+
+
+
+
+
+package codes;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+public class UserRegister extends HttpServlet {
+    private static final long serialVersionUID = 1L;
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String ad = request.getParameter("ad");
+        String soyad = request.getParameter("soyad");
+        String eposta = request.getParameter("eposta");
+        String sifre = request.getParameter("sifre");
+
+
+        String maskelenmisSifre = maskleSifre(sifre);
+
+        
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h1>Kayit Bilgileri</h1>");
+        response.getWriter().println("<p>Ad: " + ad + "</p>");
+        response.getWriter().println("<p>Soyad: " + soyad + "</p>");
+        response.getWriter().println("<p>Eposta: " + eposta + "</p>");
+        response.getWriter().println("<p>Şifre: " + maskelenmisSifre + "</p>");
+        response.getWriter().println("<br>");
+
+
+        String userAgent = request.getHeader("User-Agent");
+
+
+        response.getWriter().println("<script type=\"text/javascript\">");
+        response.getWriter().println("alert('Tarayıcı Modeli: " + userAgent + "');");
+        response.getWriter().println("</script>");
+
+        response.getWriter().println("</body></html>");
+    }
+
+
+    private String maskleSifre(String sifre) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < sifre.length(); i++) {
+            sb.append("*");
+        }
+        return sb.toString();
+    }
+}
